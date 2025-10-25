@@ -1,13 +1,13 @@
-package autotorch.autotorch.client;
+package io.github.defalt.autotorch.client;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.*;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-@Config(name="autotorch")
+@Config(name = "autotorch-reimagined")
 public class ModConfig implements ConfigData {
 
-    @Comment("Enable the Auto Torch Mod")
+    @Comment("Enable the AutoTorch Reimagined mod")
     boolean enabled = true;
 
     @Comment("Enable accurate torch placement directly on block below.\n" +
@@ -19,7 +19,5 @@ public class ModConfig implements ConfigData {
     @Comment("The block light level below which the torches are placed.")
     @ConfigEntry.BoundedDiscrete(min = 1, max = 14)
     int lightLevel = 4;
-
-
 
 }

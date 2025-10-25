@@ -1,31 +1,33 @@
 {
   "schemaVersion": 1,
-  "id": "autotorch",
+  "id": "autotorch-reimagined",
   "version": "${version}",
-  "name": "Autotorch",
+  "name": "AutoTorch Reimagined",
   "description": "Autoplace torches",
   "authors": [
-    "noteness"
+    "noteness",
+    "defalt"
   ],
   "contact": {
-    "homepage": "https://github.com/necessary129/minecraft-autotorch",
-    "issues": "https://github.com/necessary129/minecraft-autotorch/issues",
-    "sources": "https://github.com/necessary129/minecraft-autotorch"
+    "homepage": "https://github.com/0xdefalt/autotorch-reimagined",
+    "issues": "https://github.com/0xdefalt/autotorch-reimagined/issues",
+    "sources": "https://github.com/0xdefalt/autotorch-reimagined"
   },
   "license": "LGPL-3.0-or-later",
-  "icon": "assets/autotorch/icon.png",
+  "icon": "assets/autotorch-reimagined/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "autotorch.autotorch.client.AutotorchClient"
+      "io.github.defalt.autotorch.client.AutoTorchReimaginedClient"
     ],
     "modmenu": [
-      "autotorch.autotorch.client.ModMenuIntegration"
+      "io.github.defalt.autotorch.client.ModMenuIntegration"
     ]
   },
   "depends": {
-    "fabricloader": ">=0.11.1",
-    "minecraft": ">=1.17",
-    "fabric": ">=0.30.0"
+    "fabricloader": ">=0.15.10",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*"
   }
 }

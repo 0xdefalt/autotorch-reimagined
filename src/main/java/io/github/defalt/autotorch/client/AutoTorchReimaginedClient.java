@@ -14,7 +14,7 @@
 //You should have received a copy of the GNU Lesser General Public License
 //along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package autotorch.autotorch.client;
+package io.github.defalt.autotorch.client;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -46,31 +46,31 @@ import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import org.lwjgl.glfw.GLFW;
 
-
 @Environment(EnvType.CLIENT)
-public class AutotorchClient implements ClientModInitializer {
-    private MinecraftClient client;
-    public ConfigHolder<ModConfig> CONFIG;
-    private ModConfig CDATA;
+public class AutoTorchReimaginedClient implements ClientModInitializer {
+
+    private MinecraftClient minecraftClient;
+    public ConfigHolder<ModConfig> configHolder;
+    private ModConfig modConfig;
     private static final ImmutableSet<Item> TorchSet = ImmutableSet.of(Items.TORCH, Items.SOUL_TORCH);
 
     private static final KeyBinding AutoPlaceBinding = KeyBindingHelper.registerKeyBinding(
             new KeyBinding(
-                    "autotorch.autotorch.toggle",
+                    "autotorch-reimagined.autotorch-reimagined.toggle",
                     InputUtil.Type.KEYSYM,
                     GLFW.GLFW_KEY_LEFT_ALT,
-                    "category.autotorch.main"
+                    KeyBinding.Category.MISC
             )
     );
 
     @Override
     public void onInitializeClient() {
-        this.client = MinecraftClient.getInstance();
-        CONFIG = AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+        this.minecraftClient = MinecraftClient.getInstance();
+        configHolder = AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         ClientTickEvents.END_CLIENT_TICK.register(this::tick);
-        CDATA = CONFIG.getConfig();
-        CONFIG.registerLoadListener((manager, data) -> {
-            CDATA = data;
+        modConfig = configHolder.getConfig();
+        configHolder.registerLoadListener((manager, data) -> {
+            modConfig = data;
             return ActionResult.SUCCESS;
         });
     }
@@ -78,33 +78,37 @@ public class AutotorchClient implements ClientModInitializer {
     public void tick(MinecraftClient client) {
         if (client.player != null && client.world != null) {
             if (AutoPlaceBinding.wasPressed()) {
-                CDATA.enabled = !CDATA.enabled;
-                var msg = CDATA.enabled ? Text.translatable("autotorch.message.enabled") : Text.translatable("autotorch.message.disabled");
-                client.player.sendMessage(msg, false);
+                modConfig.enabled = !modConfig.enabled;
+                var message = modConfig.enabled ? Text.translatable("autotorch-reimagined.message.enabled") : Text.translatable("autotorch-reimagined.message.disabled");
+                client.player.sendMessage(message, false);
             }
-            if (!CDATA.enabled) return;
+            if (!modConfig.enabled) return;
             if (!TorchSet.contains(client.player.getOffHandStack().getItem())) return;
-            BlockPos PlayerBlock = client.player.getBlockPos();
-            if (client.world.getLightLevel(LightType.BLOCK, PlayerBlock) < CDATA.lightLevel && canPlaceTorch(PlayerBlock)) {
-                offHandRightClickBlock(PlayerBlock);
+            BlockPos blockPos = client.player.getBlockPos();
+            if (client.world.getLightLevel(LightType.BLOCK, blockPos) < modConfig.lightLevel && canPlaceTorch(blockPos)) {
+                offHandRightClickBlock(blockPos);
             }
         }
     }
 
     private void offHandRightClickBlock(BlockPos pos) {
-        Vec3d hitVec = Vec3d.ofBottomCenter(pos);
-        if (CDATA.accuratePlacement) {
-            PlayerMoveC2SPacket.LookAndOnGround packet = new PlayerMoveC2SPacket.LookAndOnGround(client.player.getYaw(), 90.0F, true);
-            client.player.networkHandler.sendPacket(packet);
+        Vec3d vec3d = Vec3d.ofBottomCenter(pos);
+        if (modConfig.accuratePlacement) {
+            PlayerMoveC2SPacket.LookAndOnGround packet = new PlayerMoveC2SPacket.LookAndOnGround(
+                    minecraftClient.player.getYaw(),
+                    90.0F,
+                    true,
+                    minecraftClient.player.isOnGround()
+            );
+            minecraftClient.player.networkHandler.sendPacket(packet);
         }
-        ActionResult one = client.interactionManager.interactBlock(client.player, Hand.OFF_HAND,
-                new BlockHitResult(hitVec, Direction.DOWN, pos, false));
-        ActionResult two = client.interactionManager.interactItem(client.player, Hand.OFF_HAND);
+        ActionResult one = minecraftClient.interactionManager.interactBlock(minecraftClient.player, Hand.OFF_HAND,
+                new BlockHitResult(vec3d, Direction.DOWN, pos, false));
+        ActionResult two = minecraftClient.interactionManager.interactItem(minecraftClient.player, Hand.OFF_HAND);
     }
 
-    public boolean canPlaceTorch(BlockPos pos) {
-        return (client.world.getBlockState(pos).getFluidState().isEmpty() &&
-                Block.sideCoversSmallSquare(client.world, pos.down(), Direction.UP));
+    public boolean canPlaceTorch(BlockPos blockPos) {
+        return (minecraftClient.world.getBlockState(blockPos).getFluidState().isEmpty() && Block.sideCoversSmallSquare(minecraftClient.world, blockPos.down(), Direction.UP));
     }
+
 }
-   

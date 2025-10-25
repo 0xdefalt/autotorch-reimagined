@@ -1,0 +1,10 @@
+{
+  "text.autoconfig.autotorch-reimagined.title": "AutoTorch Reimagined",
+  "text.autoconfig.autotorch-reimagined.option.enabled": "Enable AutoTorch Reimagined",
+  "text.autoconfig.autotorch-reimagined.option.lightLevel": "Minimum light level",
+  "text.autoconfig.autotorch-reimagined.option.accuratePlacement": "Enable accurate torch placement",
+  "autotorch-reimagined.message.enabled": "Enabled automatic torch placement.",
+  "autotorch-reimagined.message.disabled": "Disabled automatic torch placement.",
+  "autotorch-reimagined.autotorch.toggle": "Toggle AutoTorch",
+  "category.autotorch-reimagined.main": "AutoTorch Reimagined"
+}

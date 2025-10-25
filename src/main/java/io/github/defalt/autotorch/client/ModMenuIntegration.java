@@ -1,4 +1,4 @@
-package autotorch.autotorch.client;
+package io.github.defalt.autotorch.client;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
@@ -13,4 +13,5 @@ public class ModMenuIntegration implements ModMenuApi {
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> AutoConfig.getConfigScreen(ModConfig.class, parent).get();
     }
+
 }

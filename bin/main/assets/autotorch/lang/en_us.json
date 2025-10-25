@@ -1,6 +1,6 @@
 {
-  "text.autoconfig.autotorch.title": "Auto Torch",
-  "text.autoconfig.autotorch.option.enabled": "Enable Auto Torch",
-  "text.autoconfig.autotorch.option.lightLevel": "Minimum Light Level",
-  "text.autoconfig.autotorch.option.accuratePlacement": "Enable Accurate Torch Placement"
+  "text.autoconfig.autotorch-reimagined.title": "AutoTorch Reimagined",
+  "text.autoconfig.autotorch-reimagined.option.enabled": "Enable AutoTorch Reimagined",
+  "text.autoconfig.autotorch-reimagined.option.lightLevel": "Minimum light level",
+  "text.autoconfig.autotorch-reimagined.option.accuratePlacement": "Enable accurate torch placement"
 }
