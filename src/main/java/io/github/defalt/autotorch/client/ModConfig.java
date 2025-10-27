@@ -19,6 +19,9 @@ public class ModConfig implements ConfigData {
     )
     boolean accuratePlacement = false;
 
+    @Comment("Ignore Sculk Sensor when placing torches.")
+    boolean ignoreSculkSensors = false;
+
     @Comment("The block light level below which the torches are placed.")
     @ConfigEntry.BoundedDiscrete(min = 1, max = 14)
     int lightLevel = 4;

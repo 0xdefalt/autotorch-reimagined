@@ -23,6 +23,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -82,8 +83,15 @@ public class AutoTorchReimaginedClient implements ClientModInitializer {
                 var message = modConfig.enabled ? Text.translatable("autotorch-reimagined.message.enabled") : Text.translatable("autotorch-reimagined.message.disabled");
                 client.player.sendMessage(message, false);
             }
-            if (!modConfig.enabled) return;
-            if (!TorchSet.contains(client.player.getOffHandStack().getItem())) return;
+            if (!modConfig.enabled) {
+                return;
+            }
+            if (!TorchSet.contains(client.player.getOffHandStack().getItem())) {
+                return;
+            }
+            if (!modConfig.ignoreSculkSensors && isSculkSensorsNearby(client.player.getBlockPos(), 7)) {
+                return;
+            }
             BlockPos blockPos = client.player.getBlockPos();
             if (client.world.getLightLevel(LightType.BLOCK, blockPos) < modConfig.lightLevel && canPlaceTorch(blockPos)) {
                 offHandRightClickBlock(blockPos);
@@ -96,7 +104,7 @@ public class AutoTorchReimaginedClient implements ClientModInitializer {
         if (modConfig.accuratePlacement) {
             PlayerMoveC2SPacket.LookAndOnGround packet = new PlayerMoveC2SPacket.LookAndOnGround(
                     minecraftClient.player.getYaw(),
-                    90.0F,
+                    90F,
                     true,
                     minecraftClient.player.isOnGround()
             );
@@ -110,5 +118,20 @@ public class AutoTorchReimaginedClient implements ClientModInitializer {
     public boolean canPlaceTorch(BlockPos blockPos) {
         return (minecraftClient.world.getBlockState(blockPos).getFluidState().isEmpty() && Block.sideCoversSmallSquare(minecraftClient.world, blockPos.down(), Direction.UP));
     }
+
+    public boolean isSculkSensorsNearby(BlockPos blockPos, int radius) {
+        Iterable<BlockPos> positions = BlockPos.iterate(
+                blockPos.add(-radius, -radius, -radius),
+                blockPos.add(radius, radius, radius)
+        );
+        for (BlockPos pos : positions) {
+            Block block = minecraftClient.world.getBlockState(pos).getBlock();
+            if (block == Blocks.SCULK_SENSOR) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }
